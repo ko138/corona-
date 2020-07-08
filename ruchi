@@ -1,0 +1,101 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import pandas as pd
+a=pd.read_csv("e:social network.csv")
+
+
+# In[2]:
+
+
+a
+
+
+# In[3]:
+
+
+x=a.iloc[:,2:4]
+y=a.iloc[:,-1]
+
+
+# In[4]:
+
+
+x
+
+
+# In[5]:
+
+
+y
+
+
+# In[6]:
+
+
+from sklearn.model_selection import train_test_split
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.20)
+
+
+# In[7]:
+
+
+from sklearn.tree import DecisionTreeClassifier
+model=DecisionTreeClassifier()
+model.fit(xtrain,ytrain)
+
+
+# In[8]:
+
+
+ypred=model.predict(xtest)
+
+
+# In[9]:
+
+
+from sklearn.metrics import accuracy_score
+accuracy_score(ytest,ypred)
+
+
+# In[ ]:
+
+
+from flask import Flask,render_template,request
+ruchi=Flask(__name__)
+@ruchi.route('/')
+def mouse():
+    return render_template("mobile.html")
+@ruchi.route('/koastubh',methods=["POST","GET"])
+def keyboard():
+    if(request.method=="POST"):
+        data1=int(request.form["v1"])
+        data2=int(request.form["v2"])
+        result=int(model.predict([[data1,data2]]))
+        
+        if(result==0):
+            nitin="you will not purchase"
+        else:
+            nitin="you will purchase"
+        return render_template("f:mobile.html",output=nitin)
+ruchi.run()    
+
+
+# In[ ]:
+
+
+res=model.predict([[34,100000]])
+if(int(res)==0):
+    print("no")
+else:
+    print("yes")
+
+
+# In[ ]:
+
+
+
+
